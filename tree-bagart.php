@@ -49,7 +49,7 @@ class TreeBuilder
         }
     }
 
-    public function getTree(int $parent, bool $memoize = false): ?Generator
+    public function getTree(int $parent): ?Generator
     {
         if (!isset($this->tree->nodes[$parent])) {
             return null;
@@ -60,7 +60,8 @@ class TreeBuilder
 
 }
 
-$mem_init = memory_get_peak_usage();
+$
+    _init = memory_get_peak_usage();
 
 $tree = unserialize(file_get_contents('tree.dat'));
 $mem = memory_get_peak_usage();
