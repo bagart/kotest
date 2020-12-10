@@ -6,7 +6,7 @@ docker-compose up -d
 docker-compose ps
 
 # generete test data
-docker exec -it kotest /usr/local/bin/php /app/gen.php 100000 500
+docker exec -it kotest /usr/local/bin/php /app/gen.php 1000000 1000
 
 #bench
 time docker exec -it kotest /usr/local/bin/php /app/tree-bagart.php
@@ -17,7 +17,41 @@ time docker exec -it kotest /usr/local/bin/php /app/tree-orig.php
 ```
 
 
-#result:
+#results:
+
+```shell
+
+➜  kotest git:(main) ✗ docker exec -it kotest /usr/local/bin/php /app/gen.php 1000000 1000
+size of data: 108.19mb
+➜  kotest git:(main) ✗ 
+➜  kotest git:(main) ✗ 
+➜  kotest git:(main) ✗ 
+➜  kotest git:(main) ✗ time docker exec -it kotest /usr/local/bin/php /app/tree-bagart.php
++mem after prepare revert index: 41.38mb (without remove of revert index)
+
+result: 1956
+time: 0s
++mem peak after data load: 857.77mb
++mem peak after getTree: 0mb
+
+mem final with revert index: 600.66mb
+
+mem final without revert index: 559.28mb
+
+docker exec -it kotest /usr/local/bin/php /app/tree-bagart.php  0.15s user 0.34s system 4% cpu 10.627 total
+➜  kotest git:(main) ✗ time docker exec -it kotest /usr/local/bin/php /app/tree-orig.php
+time: 94.87s
++mem peak after data load: 857.78mb
++mem peak after getTree: 0mb
+
++mem final: 559.28mb
+
+result: 1956
+docker exec -it kotest /usr/local/bin/php /app/tree-orig.php  0.13s user 0.15s system 0% cpu 1:37.98 total
+
+```
+
+
 ```shell
 
 ➜  kotest git:(main) ✗ docker exec -it kotest /usr/local/bin/php /app/gen.php 100000 500

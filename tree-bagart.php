@@ -28,7 +28,7 @@ class TreeBuilder
         $this->reversIndex = null;
     }
 
-    private function init(): void
+    public function init(): void
     {
         if ($this->reversIndex !== null) {
             return;
@@ -59,11 +59,18 @@ class TreeBuilder
     }
 }
 
+$mem_init = memory_get_peak_usage();
 $tree = unserialize(file_get_contents('tree.dat'));
+
+$builder = new TreeBuilder($tree);
+$mem_before_prepare = memory_get_usage();
+$builder->init();//вызывать не обязательно
+echo '+mem after prepare revert index: ' . round((memory_get_usage() - $mem_before_prepare) / 1024 / 1024, 2) . "mb (without remove of revert index)\n\n";
+
 $mem = memory_get_peak_usage();
 $time = microtime(true);
-var_dump($mem);
-$result = (new TreeBuilder($tree))->getTree(1);
+
+$result = $builder->getTree(1);
 $count = 0;
 foreach ($result as $node) {
     //echo $node->value."\n";
@@ -72,5 +79,10 @@ foreach ($result as $node) {
 
 echo "result: $count\n";
 echo 'time: ' . round((microtime(true) - $time), 2) . "s\n";
-echo '+mem data: ' . round(($mem - $mem_init)/1024/1024,2) . "mb\n";
-echo '+mem work: ' . round((memory_get_peak_usage() - $mem)/1024/1024,2) . "mb\n\n";
+echo '+mem peak after data load: ' . round(($mem - $mem_init) / 1024 / 1024, 2) . "mb\n";
+echo '+mem peak after getTree: ' . round((memory_get_peak_usage() - $mem) / 1024 / 1024, 2) . "mb\n\n";
+
+echo 'mem final with revert index: ' . round(memory_get_usage() / 1024 / 1024, 2) . "mb\n\n";
+
+$builder->reset();
+echo 'mem final without revert index: ' . round(memory_get_usage() / 1024 / 1024, 2) . "mb\n\n";
