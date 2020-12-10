@@ -57,11 +57,7 @@ class TreeBuilder
         $this->init();
         return $this->getFromRevert($parent);
     }
-
 }
-
-$
-    _init = memory_get_peak_usage();
 
 $tree = unserialize(file_get_contents('tree.dat'));
 $mem = memory_get_peak_usage();
